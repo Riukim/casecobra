@@ -4,24 +4,32 @@ import Phone from "@/components/Phone"
 import { Button } from "@/components/ui/button"
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products"
 import { cn, formatPrice } from "@/lib/utils"
-import { COLORS, FINISHES, MODELS } from "@/validators/option-validator"
+import { COLORS, MODELS } from "@/validators/option-validator"
 import { Configuration } from "@prisma/client"
+import { useMutation } from "@tanstack/react-query"
 import { ArrowRight, Check } from "lucide-react"
 import { useEffect, useState } from "react"
 import Confetti from "react-dom-confetti"
+import { createCheckoutSession } from "./actions"
+import { useRouter } from "next/navigation"
+import { useToast } from "@/components/ui/use-toast"
 
-const DesignPreview = ({configuration}: {configuration: Configuration}) => {
+const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   const [showConfetti, setShowConfetti] = useState(false)
+  const router = useRouter()
+  const { toast } = useToast()
 
   useEffect(() => {
     setShowConfetti(true)
-  }, []);
+  }, [])
 
   const { color, model, finish, material } = configuration
   const tw = COLORS.find((supportedColor) => supportedColor.value === color)?.tw
 
-  const { label: modelLabel } = MODELS.options.find(({ value }) => value === model)!
-  
+  const { label: modelLabel } = MODELS.options.find(
+    ({ value }) => value === model
+  )!
+
   let totalPrice = BASE_PRICE
   if (material === "polycarbonate") {
     totalPrice += PRODUCT_PRICES.material.polycarbonate
@@ -29,6 +37,25 @@ const DesignPreview = ({configuration}: {configuration: Configuration}) => {
   if (finish === "textured") {
     totalPrice += PRODUCT_PRICES.finish.textured
   }
+
+  const { mutate: createPaymentSession } = useMutation({
+    mutationKey: ["get-checkout-session"],
+    mutationFn: createCheckoutSession,
+    onSuccess: ({ url }) => {
+      if (url) {
+        router.push(url)
+      } else {
+        throw new Error("Unable to retrieve payment URL.")
+      }
+    },
+    onError: () => {
+      toast({
+        title: "Something went wrong",
+        description: "There was an error on our end. Please try again.",
+        variant: "destructive",
+      })
+    },
+  })
 
   return (
     <>
@@ -106,7 +133,8 @@ const DesignPreview = ({configuration}: {configuration: Configuration}) => {
                   <div className="flex items-center justify-between py-1 mt-2">
                     <p className="text-gray-600">Soft Polycarbonate Material</p>
                     <p className="font-medium text-gray-900">
-                      +{formatPrice(PRODUCT_PRICES.material.polycarbonate / 100)}
+                      +
+                      {formatPrice(PRODUCT_PRICES.material.polycarbonate / 100)}
                     </p>
                   </div>
                 ) : null}
@@ -123,8 +151,13 @@ const DesignPreview = ({configuration}: {configuration: Configuration}) => {
             </div>
 
             <div className="mt-8 flex justify-end pb-12">
-              <Button className="px-4 sm:px-6 lg:px-8">
-                Check out <ArrowRight className="h-4 w-4 ml-1.5 inline"/>
+              <Button
+                onClick={() =>
+                  createPaymentSession({ configId: configuration.id })
+                }
+                className="px-4 sm:px-6 lg:px-8"
+              >
+                Check out <ArrowRight className="h-4 w-4 ml-1.5 inline" />
               </Button>
             </div>
           </div>
