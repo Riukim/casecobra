@@ -72,7 +72,7 @@ const Page = async () => {
   })
 
   const WEEKLY_GOAL = 500
-  const MONTHLY_GOAL = 2000
+  const MONTHLY_GOAL = 2500
 
   return (
     <div className="flex min-h-screen w-full bg-muted/40">
@@ -97,7 +97,6 @@ const Page = async () => {
                 />
               </CardFooter>
             </Card>
-            {/* Monthly card goal */}
             <Card>
               <CardHeader className="pb-2">
                 <CardDescription>Last Month</CardDescription>
@@ -112,16 +111,13 @@ const Page = async () => {
               </CardContent>
               <CardFooter>
                 <Progress
-                  value={
-                    ((lastMonthSum._sum.amount ?? 0) * 100) / MONTHLY_GOAL
-                  }
+                  value={((lastMonthSum._sum.amount ?? 0) * 100) / MONTHLY_GOAL}
                 />
               </CardFooter>
             </Card>
           </div>
 
-          {/* Incoming order */}
-          <h1 className="text-4xl font-bold tracking-tight">Incoming Orders</h1>
+          <h1 className="text-4xl font-bold tracking-tight">Incoming orders</h1>
 
           <Table>
             <TableHeader>
@@ -149,13 +145,13 @@ const Page = async () => {
                       {order.user.email}
                     </div>
                   </TableCell>
-                  <TableCell className="hidden md:table-cell">
+                  <TableCell className="hidden sm:table-cell">
                     <StatusDropdown
                       id={order.id}
                       orderStatus={order.status}
                     />
                   </TableCell>
-                  <TableCell className="hidden md:table-cell">
+                  <TableCell className="hidden sm:table-cell">
                     {order.createdAt.toLocaleDateString()}
                   </TableCell>
                   <TableCell className="text-right">
