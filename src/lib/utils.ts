@@ -32,7 +32,7 @@ export function constructMetadata({
     openGraph: {
       title,
       description,
-      images: [{url: image}]
+      images: [{ url: image }],
     },
     twitter: {
       card: "summary_large_image",
@@ -40,6 +40,7 @@ export function constructMetadata({
       description,
       images: ["image"],
     },
-    icons
+    icons,
+    metadataBase: new URL("https://casecobra-liard-one.vercel.app"),
   }
 }
