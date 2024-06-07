@@ -18,7 +18,7 @@ const Navbar = async () => {
             href="/"
             className="flex z-40 font-semibold"
           >
-            case<span className="text-green-600">cobra</span>
+            Case<span className="text-green-600">Cobra</span>
           </Link>
 
           <div className="h-full flex items-center space-x-4">
