@@ -24,6 +24,9 @@ CaseCobra is a modern fullstack e-commerce platform designed for the sale of cus
 - 📤 **Uploading Images:** Navigate to the upload section to add your images.
 - 🔍 **Previewing Cases:** Use the preview feature to see how your custom phone case will look.
 - 🛒 **Purchasing:** Add items to your cart and proceed to checkout to complete your purchase.
+- 🔑 **Login:** Use the following credentials to log in:
+  - **Email:** johndoe@gmail.com
+  - **Password:** testtest
 
 ## Credits
 
